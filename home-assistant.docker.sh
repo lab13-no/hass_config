@@ -1,6 +1,9 @@
 #!/bin/bash
 
 set -e
+set -u
+
+cd `dirname $0`
 
 typeset -r -i use_x11=0
 if [ $use_x11 -gt 0 ]; then
@@ -16,7 +19,7 @@ typeset -r img_name="homeassistant/home-assistant"
 typeset -r container_name="hass.container"
 typeset -r img="${img_name}"
 typeset -r cnt="${container_name}"
-typeset -r config_export="${HOME}/.hass-config/"
+typeset -r config_export="${PWD}/"
 
 function create() {
 	mkdir -p "${config_export}"
