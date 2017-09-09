@@ -1,6 +1,8 @@
 #!/bin/bash
 
+typeset -r opt="$1"
 set -e
+set -u
 
 cd `dirname $0`
 
@@ -29,7 +31,7 @@ function start_it() {
 	docker start -a "${container_name}"
 }
 
-case "$1" in
+case "${opt}" in
 create)
 	create
 	;;
