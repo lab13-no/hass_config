@@ -1,0 +1,112 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: 59.7439
+  longitude: 10.2045
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 5
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Europe/Oslo
+
+# Show links to resources in log and frontend
+introduction:
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+http:
+  # Uncomment this to add a password (recommended!)
+  # api_password: PASSWORD
+  # Uncomment this if you are using SSL or running in Docker etc
+  # base_url: example.duckdns.org:8123
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time.
+history:
+
+# View all events in a logbook
+logbook:
+
+# Track the sun
+sun:
+
+# MQTT
+mqtt:
+  broker: mqtt-server.lan
+  discovery: true
+  discovery_prefix: homeassistant
+
+# Weather Prediction
+sensor:
+  - platform: yr
+  - platform: mqtt
+    name: "MQTT test sensor"
+    state_topic: "home-assistant/status/test"
+
+light:
+  - platform: mqtt
+    name: "kitchen APA102 RGB LED strip"
+    command_topic: "frm/kitchen/light/apa102/switch"
+    brightness_command_topic: "frm/kitchen/light/apa102/brightness/set"
+    brightness_scale: 31
+    effect_command_topic: "frm/kitchen/light/apa102/effect/set"
+    optimistic: true
+    payload_off: "OFF"
+    payload_on: "ON"
+    rgb_command_topic: "frm/kitchen/light/apa102/rgb/set"
+#  - platform: mqtt_template
+#    name: 'kitchen_apa102_template'
+#    command_topic: 'frm/kitchen/light/apa102/manual'
+#    command_on_template: '{{ brightness|d }} {{ red|d }} {{ green|d }} {{ blue|d }}'
+#    command_off_template: 'OFF'
+#    state_template: "{{ value.split(' ')[0] }}" # ON or OFF
+#    brightness_template: "{{ value.split(' ')[1] }}"
+#    red_template: "{{ value.split(' ')[2] }}"
+#    green_template: "{{ value.split(' ')[3] }}"
+#    blue_template: "{{ value.split(' ')[4] }}"
+    
+
+# Text to speech
+tts:
+  platform: google
+
+group: !include groups.yaml
+automation: !include automations.yaml
+
+
+telegram_bot:
+  - platform: polling
+    api_key: !secret telegram_bot_api_key
+    allowed_chat_ids:
+      - !secret telegram_chat_id_01
+
+notify:
+  - name: google_xmpp
+    platform: xmpp
+    sender: !secret google_xmpp_sender_id
+    password: !secret google_xmpp_sender_pwd
+    recipient: !secret google_xmpp_recipient
+  - name: telegram
+    platform: telegram
+    chat_id: !secret telegram_chat_id_01
+

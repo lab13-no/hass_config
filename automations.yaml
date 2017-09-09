@@ -1,0 +1,109 @@
+# []
+- id: xmpp_test
+  alias: Send a message at a given time
+  trigger:
+    platform: time
+    hours: 1
+    minutes: 4
+    seconds: 0
+  action:
+    service: notify.google_xmpp
+    data:
+      message: 'Test reminder'
+#- id: telegram_echo_bridge
+#  alias: 'Telegram_echo_bridge'
+#  hide_entity: true
+#  trigger:
+#    platform: event
+#    event_type: telegram_text
+#  action:
+#    - service: telegram_bot.send_message
+#      data_template:
+#        title: '* dumb automation*'
+#        target: '{{ trigger.event.data.user_id }}'
+#        message: 'You said: {{ trigger.event.data.text }}'
+#        disable_notification: true
+#        inline_keyboard:
+#          - "Edit message:/edit_msg, Don't:/do_nothing"
+#          - "Remove this button:/remove_button"
+#- id: telegram_echo_bridge
+#  alias: 'Telegram_echo_bridge'
+#  hide_entity: true
+#  trigger:
+#    platform: event
+#    event_type: telegram_command
+#  action:
+#    - service: telegram_bot.send_message
+#      data_template:
+#        title: '* dumb automation*'
+#        target: '{{ trigger.event.data.user_id }}'
+#        message: 'Your command: {{ trigger.event.data["args"].split("''")[1] }}'
+#
+#        disable_notification: true
+#        inline_keyboard:
+#          - "Edit message:/edit_msg, Don't:/do_nothing"
+#          - "Remove this button:/remove_button"
+- id: telegram_kitchen_light
+  alias: 'Telegram_kitchen_light'
+  hide_entity: true
+  trigger:
+    platform: event
+    event_type: telegram_command
+    event_data:
+      data: '/start'
+  action:
+    - service: notify.telegram
+      data:
+        message: 'commands'
+        data:
+          keyboard:
+            - '/off'
+            - '/brightness'
+            - '/rgb'
+            - '/manual'
+- id: 'telegram_kitchen_light_brightness'
+  alias: 'Telegram_kitchen_light_brightness'
+  hide_entity: true
+  trigger:
+    platform: event
+    event_type: telegram_command
+    event_data:
+      command: '/brightness'
+  action:
+    - service: light.turn_on
+      data:
+        entity_id: light.kitchen_apa102_rgb_led_strip
+        brightness: 7
+#      rgb_color: [255, 255, 255]
+#    data_template:
+#      brightness: '{{ trigger.event.data["args"] | int }}'
+
+
+#- id: telegram_edit_msg
+#  alias: 'Telegram message edit bot'
+#  hide_entity: true
+#  trigger:
+#    platform: event
+#    event_type: telegram_callback
+#    event_data:
+#      data: '/edit_msg'
+#  action:
+#    - service: telegram_bot.answer_callback_query
+#      data_template:
+#        callback_query_id: ''
+#        message: 'Edit the message'
+#        show_alert: true
+#    - service: telegram_bot.edit_message
+#      data_template:
+#        message_id: '{{ trigger.event.data.message.message_id }}'
+#        chat_id: '{{ trigger.event.data.user_id }}'
+#        title: '* correction: '
+#        inline_keyboard:
+#          - "Edit message:/edit_msg, Don't:/do_nothing"
+#          - "Remove this button:/remove_button"
+#        message: >
+#          Callback received from {% raw %}{{
+#            trigger.event.data.from_first
+#          }}.
+#        Message id: {{ trigger.event.data.message.message_id }}.
+#        Data: {{ trigger.event.data.data }}
