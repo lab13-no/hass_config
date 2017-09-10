@@ -50,17 +50,19 @@
     platform: event
     event_type: telegram_command
     event_data:
-      data: '/start'
+      command: '/start'
   action:
-    - service: notify.telegram
-      data:
+    - service: telegram_bot.send_message
+      data_template:
+        title: "Kitchen light control"
+        target: '{{ trigger.event.data.user_id }}'
         message: 'commands'
-        data:
-          keyboard:
-            - '/off'
-            - '/brightness'
-            - '/rgb'
-            - '/manual'
+        disable_notification: true
+        inline_keyboard:
+          - 'Switch off:/brightness 0'
+          - 'Dimmed down:/brightness 2'
+          - 'Medium bright:/brightness 8'
+          - 'Full brightness:/brightness 31'
 - id: 'telegram_kitchen_light_brightness'
   alias: 'Telegram_kitchen_light_brightness'
   hide_entity: true
@@ -71,12 +73,26 @@
       command: '/brightness'
   action:
     - service: light.turn_on
-      data:
-        entity_id: light.kitchen_apa102_rgb_led_strip
-        brightness: 7
-#      rgb_color: [255, 255, 255]
-#    data_template:
-#      brightness: '{{ trigger.event.data["args"] | int }}'
+      entity_id: light.kitchen_apa102_rgb_led_strip
+#      data:
+#        brightness: 177
+##        rgb_color: [255, 255, 255]
+      data_template:
+        brightness: '{{ trigger.event.data["args"][0] | int }}'
+- id: 'telegram_test'
+  alias: 'Telegram_test'
+  hide_entity: true
+  trigger:
+    platform: event
+    event_type: telegram_command
+    event_data:
+      command: '/b'
+  action:
+    - service: telegram_bot.send_message
+      data_template:
+        title: '* test result:*'
+        target: '{{ trigger.event.data.user_id }}'
+        message: 'Your raw command: {{ trigger.event.data["args"][0] }}'
 
 
 #- id: telegram_edit_msg
