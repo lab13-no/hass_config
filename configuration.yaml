@@ -68,9 +68,13 @@ light:
     name: "kitchen APA102 RGB LED strip"
     command_topic: "frm/kitchen/light/apa102/switch"
     brightness_command_topic: "frm/kitchen/light/apa102/brightness/set"
-# There is a bug which causes brightness to always be set to zero
-# from automation, if the scale is too low.
-#    brightness_scale: 31
+# There is a bug which scales down the brightness value set in automation by
+#    brightness_scale/255.
+# So, passing a value of 31, will result in
+#     31 * (brightness_scale/255) = 3.77 = 3
+# instead of
+#     31 * 255/31
+    brightness_scale: 31
     effect_command_topic: "frm/kitchen/light/apa102/effect/set"
     optimistic: true
     payload_off: "OFF"
