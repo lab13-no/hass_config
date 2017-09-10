@@ -112,3 +112,10 @@ notify:
     platform: telegram
     chat_id: !secret telegram_chat_id_01
 
+#media_player:
+#  - platform: denonavr
+#    host: amp_denon_4308.lan
+#    show_all_sources: true
+#    name: amplifier
+# This module does not yet support AVR4308
+#    Power, InputFuncSelect, Mute, MasterVolume, FriendlyName
